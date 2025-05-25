@@ -11,6 +11,7 @@ kfm, stages/kfm.def
 kfm, palnum=7, stages/kfm.def
 ### This KFM will select palette 1 because 12 - 13 = 1
 kfm, palnum=13, stages/kfm.def
+
 ![Image of KFM with different palettes](kfm.png)
 
 You can also add palname to add a name for the palette the character uses.
@@ -19,5 +20,6 @@ example:
 kfm, palnum=1, stages/kfm.def
 ### This KFM uses a green palette so using palname you can display that its a green color
 kfm, palnum=7, palname=green, stages/kfm.def
+
 ![Image of palname working](screenselect.png)
 
