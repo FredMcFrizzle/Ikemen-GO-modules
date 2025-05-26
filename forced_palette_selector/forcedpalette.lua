@@ -1,6 +1,6 @@
 --[[	   				  PALNUM MODULE
 ===================================================================
-Version: 1.1
+Version: 1.2
 Author: Fred McFrizzle
 Tested on: 2024-08-14 Nightly Build
 Description:
@@ -32,6 +32,40 @@ Adds palnum function to select.def, if palnum used then it forces that palette n
 local palnameX = 0
 --Default: 10
 local palnameY = 10
+
+
+
+local stageRandom = false
+local stageListNo = 0
+local timerSelect = 0
+--sets stage
+function start.f_setStage(num, assigned)
+	if main.stageMenu then
+		num = main.t_selectableStages[stageListNo]
+		if stageListNo == 0 then
+			num = main.t_selectableStages[math.random(1, #main.t_selectableStages)]
+			stageListNo = num -- comment out to randomize stage after each fight in survival mode, when random stage is chosen
+			stageRandom = true
+		else
+			num = main.t_selectableStages[stageListNo]
+		end
+		assigned = true
+	end
+	if not assigned then
+		if main.charparam.stage and start.f_getCharData(start.p[2].t_selected[1].ref).stage ~= nil then --stage assigned as character param
+			num = math.random(1, #start.f_getCharData(start.p[2].t_selected[1].ref).stage)
+			num = start.f_getCharData(start.p[2].t_selected[1].ref).stage[num]
+		elseif main.stageOrder and main.t_orderStages[start.f_getCharData(start.p[2].t_selected[1].ref).order] ~= nil then --stage assigned as stage order param
+			num = math.random(1, #main.t_orderStages[start.f_getCharData(start.p[2].t_selected[1].ref).order])
+			num = main.t_orderStages[start.f_getCharData(start.p[2].t_selected[1].ref).order][num]
+		else --stage randomly selected
+			num = main.t_includeStage[1][math.random(1, #main.t_includeStage[1])]
+		end
+	end
+	selectStage(num)
+	return num
+end
+
 
 --;===========================================================
 --; PALETTE KEYMAP
@@ -512,4 +546,40 @@ function start.f_selectReset(hardReset)
 	t_recordText = start.f_getRecordText()
 	menu.movelistChar = 1
 	hook.run("start.f_selectReset")
+end
+
+--;===========================================================
+--; STAGE MENU
+--;===========================================================
+
+function start.f_stageMenu()
+	local n = stageListNo
+	if timerSelect == -1 then
+		stageEnd = true
+		return
+	elseif main.f_input(main.t_players, {'$B'}) then
+		sndPlay(motif.files.snd_data, motif.select_info.stage_move_snd[1], motif.select_info.stage_move_snd[2])
+		stageListNo = stageListNo - 1
+		if stageListNo < 0 then stageListNo = #main.t_selectableStages end
+	elseif main.f_input(main.t_players, {'$F'}) then
+		sndPlay(motif.files.snd_data, motif.select_info.stage_move_snd[1], motif.select_info.stage_move_snd[2])
+		stageListNo = stageListNo + 1
+		if stageListNo > #main.t_selectableStages then stageListNo = 0 end
+	elseif main.f_input(main.t_players, {'$U'}) then
+		sndPlay(motif.files.snd_data, motif.select_info.stage_move_snd[1], motif.select_info.stage_move_snd[2])
+		for i = 1, 10 do
+			stageListNo = stageListNo - 1
+			if stageListNo < 0 then stageListNo = #main.t_selectableStages end
+		end
+	elseif main.f_input(main.t_players, {'$D'}) then
+		sndPlay(motif.files.snd_data, motif.select_info.stage_move_snd[1], motif.select_info.stage_move_snd[2])
+		for i = 1, 10 do
+			stageListNo = stageListNo + 1
+			if stageListNo > #main.t_selectableStages then stageListNo = 0 end
+		end
+	end
+	if n ~= stageListNo and stageListNo > 0 then
+		animReset(main.t_selStages[main.t_selectableStages[stageListNo]].anim_data)
+		animUpdate(main.t_selStages[main.t_selectableStages[stageListNo]].anim_data)
+	end
 end
