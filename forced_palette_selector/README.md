@@ -1,4 +1,4 @@
-## Forced Palette
+# Forced Palette
 
 Orignally written by Rakiel and edited by me.
 Forced palette allows for characters to be forced into a palette on selection.
@@ -23,3 +23,5 @@ kfm, palnum=7, palname=green, stages/kfm.def
 
 ![Image of palname working](screenselect.png)
 
+## How to install:
+Drag and drop the forcedpalette.lua file into external\mods\ directory

@@ -4,12 +4,12 @@ Version: 1.2
 Author: Fred McFrizzle
 Tested on: 2024-08-14 Nightly Build
 Description:
-Adds palnum function to select.def, if palnum used then it forces that palette number on the character.
+Adds palnum and palname function to select.def, if palnum used then it forces that palette number on the character.
 ===================================================================
 ]]
 
 -- HOW TO INSTALL!
--- Drag and drop the palnum.lua file into external\mods\ directory
+-- Drag and drop the forcedpalette.lua file into external\mods\ directory
 
 -- HOW TO USE!
 -- in your select.def file under characters, when assigning a character you can now force the character to use a palette (this helps for secret palette characters)
@@ -33,7 +33,13 @@ local palnameX = 0
 --Default: 10
 local palnameY = 10
 
+--;===========================================================
+--; END OF CONFIG
+--;===========================================================
 
+--;===========================================================
+--; STAGE SELECT FIX
+--;===========================================================
 
 local stageRandom = false
 local stageListNo = 0
